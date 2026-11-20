@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Schilderij – beamer</title>
+    <!-- Oude lettertypes, zoals in een gedrukt boek uit de tijd van de schilderijen -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=IM+Fell+English+SC&display=swap" />
+    <link rel="stylesheet" href="/src/display.css" />
+  </head>
+  <body>
+    <!--
+      Deze waarschuwing staat er alleen als het JavaScript NIET geladen is
+      (bv. omdat je het bestand rechtstreeks opende i.p.v. via "npm run dev").
+      Zodra het script werkt, haalt het deze melding meteen weg.
+    -->
+    <div id="startfout" style="position:fixed;inset:0;z-index:99999;padding:40px;background:#fff;color:#111;font:18px/1.5 sans-serif">
+      <h1 style="margin-top:0">Deze pagina werkt niet zo</h1>
+      <p>Je opende dit bestand rechtstreeks (of via Live Server). Het project moet via Vite draaien:</p>
+      <ol>
+        <li>Open een terminal in de projectmap <code>byob-schilderij</code></li>
+        <li>Typ <code>npm install</code> (alleen de eerste keer)</li>
+        <li>Typ <code>npm run dev</code></li>
+        <li>Open het adres dat verschijnt, bv. <code>http://localhost:5173/display.html</code></li>
+      </ol>
+    </div>
+    <!--
+      #wereld is altijd 1920 x 1080 pixels groot.
+      display.js schaalt het geheel zodat het op elk scherm past.
+      Alles hierbinnen gebruikt dus "wereld-pixels".
+    -->
+    <div id="wereld">
+      <img id="schilderij" alt="" />
+
+      <!-- Hier komen alle mannetjes in (door display.js) -->
+      <div id="mannetjes-laag"></div>
+
+      <!-- Debugmodus (toets D): loopzone, doelen en coördinaten -->
+      <canvas id="debug-canvas" width="1920" height="1080" hidden></canvas>
+
+      <!-- Naambordje zoals in een museum: welk schilderij hangt er? -->
+      <div id="naambordje"><strong></strong><span></span></div>
+
+      <!-- Grote titel die even verschijnt na een wissel -->
+      <div id="naamkaart"><h1></h1><p></p></div>
+
+      <!-- Vernis: linnen en craquelé over alles (ook over de mannetjes), en donkere randen -->
+      <div id="vernis"></div>
+
+      <!-- QR-code in de hoek -->
+      <div id="qr-hoek">
+        <canvas id="qr-code"></canvas>
+        <p>Scan &amp; stap in<br />het schilderij!</p>
+      </div>
+    </div>
+
+    <!-- Zwart doek om rustig van schilderij te wisselen (begint zwart, wordt doorzichtig) -->
+    <div id="wissel-doek" class="zichtbaar"></div>
+
+    <!-- Info-paneel voor de debugmodus (buiten de wereld, dus niet geschaald) -->
+    <div id="debug-paneel" hidden></div>
+
+    <!-- Meldingen, bv. "masker niet gevonden" of "demomodus" -->
+    <div id="melding" hidden></div>
+
+    <script type="module" src="/src/display.js"></script>
+  </body>
+</html>

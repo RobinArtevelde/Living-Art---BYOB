@@ -1,0 +1,19 @@
+{
+  "name": "byob-schilderij",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Stap in het schilderij: bezoekers maken op hun gsm een personage dat rondwandelt in het Lam Gods op de muur.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "preview": "vite preview --host"
+  },
+  "dependencies": {
+    "firebase": "^13.3.0",
+    "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "vite": "^8.3.8"
+  }
+}

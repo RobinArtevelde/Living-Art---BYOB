@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#1b1b2f" />
+    <title>Stap in het schilderij</title>
+    <link rel="stylesheet" href="/src/join.css" />
+  </head>
+  <body>
+    <!--
+      Deze waarschuwing staat er alleen als het JavaScript NIET geladen is
+      (bv. omdat je het bestand rechtstreeks opende i.p.v. via "npm run dev").
+      Zodra het script werkt, haalt het deze melding meteen weg.
+    -->
+    <div id="startfout" style="position:fixed;inset:0;z-index:99999;padding:40px;background:#fff;color:#111;font:18px/1.5 sans-serif">
+      <h1 style="margin-top:0">Deze pagina werkt niet zo</h1>
+      <p>Je opende dit bestand rechtstreeks (of via Live Server). Het project moet via Vite draaien:</p>
+      <ol>
+        <li>Open een terminal in de projectmap <code>byob-schilderij</code></li>
+        <li>Typ <code>npm install</code> (alleen de eerste keer)</li>
+        <li>Typ <code>npm run dev</code></li>
+        <li>Open het adres dat verschijnt, bv. <code>http://localhost:5173/display.html</code></li>
+      </ol>
+    </div>
+    <main>
+      <!-- SCHERM 1: het formulier -->
+      <section id="formulier-scherm">
+        <h1>Stap in het schilderij</h1>
+        <p class="intro">Maak je eigen figuurtje en zie het rondlopen op de muur.</p>
+
+        <!-- Welk schilderij hangt er nu? (ingevuld door join.js zodra de muur het laat weten) -->
+        <section id="nu-op-de-muur" class="nu-op-de-muur" hidden>
+          <p class="nu-label">Nu op de muur</p>
+          <h2 id="nu-titel"></h2>
+          <p id="nu-maker" class="nu-maker"></p>
+          <p class="wist-je-dat"><strong>Wist je dat…</strong> <span id="nu-feitje"></span></p>
+          <button type="button" id="feitje-knop" class="kleine-knop">Nog een feitje</button>
+        </section>
+
+        <form id="formulier" novalidate>
+          <label for="naam">Jouw naam</label>
+          <input id="naam" name="naam" type="text" maxlength="16" autocomplete="off"
+                 autocapitalize="words" enterkeyhint="done" placeholder="bv. Lotte" />
+          <p id="teller" class="teller">0 / 16</p>
+
+          <!-- Twee manieren om je figuurtje te maken -->
+          <div class="tabs" role="tablist">
+            <button type="button" role="tab" id="tab-samenstellen" aria-selected="true">Personage</button>
+            <button type="button" role="tab" id="tab-tekenen" aria-selected="false">Zelf tekenen</button>
+          </div>
+
+          <!-- MANIER 1: stel je eigen middeleeuwer samen -->
+          <section id="paneel-samenstellen" class="paneel">
+            <p id="tip-samenstellen" class="tip">De plooien en stoffen komen uit het Lam Gods van Van Eyck.</p>
+            <!-- Het voorbeeld blijft bovenaan staan als je scrolt (sticky), zo zie je je mannetje altijd -->
+            <div class="voorbeeld-houder">
+              <div id="voorbeeld" class="voorbeeld"></div>
+              <button type="button" id="willekeurig-knop" class="verras-knop">🎲 Verras me</button>
+            </div>
+            <!-- De stappen: Wie, Hoofd, Kleren, ... (ingevuld door join.js) -->
+            <div id="stappen" class="stappen" role="tablist"></div>
+            <!-- De rijen met pijltjes (‹ Mantel ›) van de gekozen stap -->
+            <div id="kiezers" class="kiezers"></div>
+            <!-- De kleuren (alleen bij de stap "Kleuren") -->
+            <div id="kleurvelden"></div>
+            <button type="button" id="volgende-stap" class="kleine-knop volgende-stap">Volgende stap ›</button>
+          </section>
+
+          <!-- MANIER 2: zelf tekenen -->
+          <section id="paneel-tekenen" class="paneel" hidden>
+            <p class="tip">Teken je mannetje met je vinger. Het laagste punt van je tekening wordt de voeten.</p>
+            <!-- 300 x 500 = dezelfde verhouding (60:100) als de figuurtjes -->
+            <canvas id="tekenvlak" class="tekenvlak" width="300" height="500"></canvas>
+            <div class="teken-knoppen">
+              <div id="penkleuren" class="kleuren"></div>
+              <button type="button" id="ongedaan-knop" class="kleine-knop">↶ Ongedaan</button>
+              <button type="button" id="wis-knop" class="kleine-knop">Wissen</button>
+            </div>
+          </section>
+
+          <p id="foutmelding" class="foutmelding" role="alert"></p>
+          <button type="submit" id="verstuur-knop" class="grote-knop">Stuur mijn mannetje</button>
+        </form>
+      </section>
+
+      <!-- SCHERM 2: de bevestiging (verborgen tot er iets verstuurd is) -->
+      <section id="bevestiging-scherm" hidden>
+        <div id="bevestiging-figuur" class="bevestiging-figuur"></div>
+        <h1>Kijk naar de muur!</h1>
+        <p class="intro"><strong id="bevestiging-naam"></strong> wandelt nu rond in het schilderij.</p>
+
+        <!-- Acties: laat je mannetje iets doen dat bij het verhaal van het schilderij past -->
+        <section class="acties" aria-labelledby="acties-titel">
+          <h2 id="acties-titel">Doe mee met het verhaal</h2>
+          <p class="tip" id="acties-uitleg"></p>
+          <div id="acties" class="actie-knoppen"></div>
+          <p class="actie-melding" id="actie-melding" role="status"></p>
+        </section>
+
+        <button type="button" id="opnieuw-knop" class="kleine-knop">Nog een mannetje sturen</button>
+      </section>
+    </main>
+
+    <script type="module" src="/src/join.js"></script>
+  </body>
+</html>

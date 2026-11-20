@@ -1,0 +1,467 @@
+/* =====================================================================
+   GSM-PAGINA (mobile-first: eerst ontworpen voor een smal scherm)
+   ===================================================================== */
+
+/* Kleuren op één plek, zodat je ze makkelijk kan aanpassen */
+:root {
+  --achtergrond: #1b1b2f;
+  --kaart: #26264a;
+  --tekst: #f5f3ee;
+  --accent: #ffd23f;
+  --fout: #ff8a80;
+}
+
+* {
+  box-sizing: border-box;
+  min-width: 0; /* niets mag breder worden dan het scherm */
+}
+
+html,
+body {
+  overflow-x: clip; /* nooit opzij scrollen (clip, niet hidden: anders werkt "sticky" niet) */
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--achtergrond);
+  color: var(--tekst);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+main {
+  max-width: 440px; /* op een tablet/laptop niet té breed */
+  margin: 0 auto;
+  padding: 24px 16px 40px;
+}
+
+h1 {
+  margin: 8px 0 4px;
+  font-size: 1.8rem;
+  line-height: 1.1;
+}
+
+.intro {
+  margin: 0 0 24px;
+  opacity: 0.8;
+}
+
+/* --- Naamveld --- */
+label,
+legend {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+input[type='text'] {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  background: var(--kaart);
+  color: var(--tekst);
+  font-size: 1.2rem; /* minstens 16px, anders zoomt iOS in */
+}
+
+input[type='text']:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.teller {
+  margin: 4px 0 20px;
+  text-align: right;
+  font-size: 0.85rem;
+  opacity: 0.6;
+}
+
+/* --- Tabbladen: personage / zelf tekenen --- */
+.tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  margin-bottom: 16px;
+  padding: 4px;
+  border-radius: 14px;
+  background: var(--kaart);
+}
+
+.tabs button {
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--tekst);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tabs button[aria-selected='true'] {
+  background: var(--accent);
+  color: var(--achtergrond);
+}
+
+.paneel {
+  margin-bottom: 20px;
+}
+
+/* --- Het personage: lijf + benen liggen precies over elkaar --- */
+.samengesteld {
+  position: relative;
+}
+
+.samengesteld .deel {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Het voorbeeld bovenaan */
+.voorbeeld {
+  display: flex;
+  justify-content: center;
+  padding: 36px 0 12px;
+  border-radius: 14px;
+  background: var(--kaart);
+}
+
+.voorbeeld.samengesteld,
+.bevestiging-figuur.samengesteld {
+  width: 150px;
+  height: 300px; /* 60 : 120 eenheden */
+  margin: 0 auto;
+  padding: 0;
+}
+
+.voorbeeld.samengesteld {
+  /* een stukje "wei" achter het personage */
+  width: 100%;
+  background: linear-gradient(#26264a 70%, #3d4a24);
+  border-radius: 14px;
+}
+
+.voorbeeld.samengesteld .deel {
+  left: 50%;
+  width: 150px;
+  transform: translateX(-50%);
+}
+
+/* Een getekend mannetje op het bevestigingsscherm */
+.bevestiging-figuur > img {
+  width: auto;
+  height: 260px;
+}
+
+/* --- Kiezers: Label   ‹  waarde  › --- */
+.kiezers {
+  display: grid;
+  gap: 6px;
+  margin: 12px 0 16px;
+}
+
+.kiezer {
+  display: grid;
+  grid-template-columns: 5em 42px minmax(0, 1fr) 42px; /* minmax(0, …): lange woorden mogen niet duwen */
+  align-items: center;
+  gap: 6px;
+}
+
+.kiezer-label {
+  font-size: 0.9rem;
+  opacity: 0.75;
+  line-height: 1.15;
+  overflow-wrap: anywhere; /* een te lang woord breekt af i.p.v. over de knop te lopen */
+  hyphens: auto;
+}
+
+.kiezer-waarde {
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1.2;
+  overflow-wrap: break-word; /* alleen afbreken als een woord écht niet past */
+  hyphens: auto;
+}
+
+.pijl {
+  height: 44px;
+  border: none;
+  border-radius: 10px;
+  background: var(--kaart);
+  color: var(--tekst);
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.kleurlabel {
+  margin: 12px 0 6px;
+  font-size: 0.9rem;
+  opacity: 0.75;
+}
+
+/* --- Tekenen --- */
+.tip {
+  margin: 0 0 10px;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.tekenvlak {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  aspect-ratio: 3 / 5;
+  margin: 0 auto;
+  border-radius: 14px;
+  /* Perkament met een stippellijn als "grond". Deze achtergrond wordt
+     NIET meegestuurd: alleen wat je tekent. */
+  background:
+    repeating-linear-gradient(90deg, #b9a77f 0 10px, transparent 10px 20px) 0 92% / 100% 2px no-repeat,
+    #f3ead7;
+  touch-action: none; /* anders scrolt de pagina mee als je tekent */
+}
+
+.teken-knoppen {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.teken-knoppen .kleine-knop {
+  margin-top: 0;
+}
+
+/* --- Kleuren kiezen: ronde bolletjes --- */
+.kleuren {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.kleur-knop {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.kleur-knop[aria-pressed='true'] {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--achtergrond), 0 0 0 6px var(--accent);
+}
+
+/* --- Knoppen --- */
+.grote-knop {
+  width: 100%;
+  padding: 18px;
+  border: none;
+  border-radius: 14px;
+  background: var(--accent);
+  color: #1b1b2f;
+  font-size: 1.2rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.grote-knop:disabled {
+  opacity: 0.5;
+}
+
+.kleine-knop {
+  margin-top: 16px;
+  padding: 12px 18px;
+  border: 2px solid var(--tekst);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--tekst);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.foutmelding {
+  min-height: 1.4em;
+  margin: 0 0 8px;
+  color: var(--fout);
+  font-weight: 600;
+}
+
+/* --- Bevestigingsscherm --- */
+#bevestiging-scherm {
+  padding-top: 40px;
+  text-align: center;
+}
+
+.bevestiging-figuur > img,
+.bevestiging-figuur.samengesteld {
+  animation: springen 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes springen {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-16px); }
+}
+
+/* --- "Nu op de muur": welk schilderij hangt er, met een feitje --- */
+.nu-op-de-muur {
+  margin: 0 0 20px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #3a2a18, #2a2236);
+  border: 1px solid #c99a3666;
+}
+.nu-label {
+  margin: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #e8c46a;
+}
+.nu-op-de-muur h2 {
+  margin: 2px 0 0;
+  font-size: 1.3rem;
+}
+.nu-maker {
+  margin: 0 0 10px;
+  font-size: 0.9rem;
+  opacity: 0.75;
+}
+.wist-je-dat {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+.nu-op-de-muur .kleine-knop {
+  margin-top: 10px;
+  padding: 8px 14px;
+  font-size: 0.85rem;
+}
+
+
+/* --- Het voorbeeld blijft bovenaan staan terwijl je scrolt --- */
+.voorbeeld-houder {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  margin: 0 -16px; /* tot tegen de randen van het scherm */
+  padding: 8px 16px 10px;
+  background: var(--achtergrond);
+  box-shadow: 0 10px 14px -10px #000c;
+}
+
+.voorbeeld.samengesteld {
+  height: 230px; /* kleiner dan vroeger, zodat er plaats is voor de keuzes eronder */
+}
+
+.voorbeeld.samengesteld .deel {
+  width: 115px;
+}
+
+.verras-knop {
+  position: absolute;
+  right: 26px;
+  bottom: 20px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 999px;
+  background: #000a;
+  color: var(--tekst);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* --- De stappen: Wie · Hoofd · Kleren · In je handen · Kleuren --- */
+.stappen {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 12px 0 4px;
+  scroll-margin-top: 260px; /* bij het springen naar de stappen niet onder het voorbeeld verdwijnen */
+}
+
+.stappen button {
+  flex: 1 1 auto;
+  min-height: 40px;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 999px;
+  background: var(--kaart);
+  color: var(--tekst);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.stappen button[aria-selected='true'] {
+  background: var(--accent);
+  color: var(--achtergrond);
+}
+
+.volgende-stap {
+  width: 100%;
+}
+
+/* --- Acties: je mannetje iets laten doen (na het versturen) --- */
+.acties {
+  margin: 28px 0 12px;
+  padding: 16px;
+  border-radius: 14px;
+  background: var(--kaart);
+  text-align: left;
+}
+
+.acties h2 {
+  margin: 0 0 4px;
+  font-size: 1.2rem;
+}
+
+.actie-knoppen {
+  display: grid;
+  gap: 10px;
+}
+
+.actie-knop {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 56px;
+  padding: 10px 14px;
+  border: 2px solid var(--accent);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--tekst);
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
+.actie-knop:active:not(:disabled) {
+  background: var(--accent);
+  color: var(--achtergrond);
+}
+
+.actie-knop:disabled {
+  opacity: 0.45;
+}
+
+.actie-icoon {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.actie-melding {
+  min-height: 1.4em;
+  margin: 10px 0 0;
+  font-weight: 600;
+}

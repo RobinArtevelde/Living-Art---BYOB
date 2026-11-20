@@ -1,0 +1,1397 @@
+/* Opmaak van de muur (display.html). Alle maten zijn in wereld-pixels (1920 x 1080). */
+
+/* =====================================================================
+   BASIS: zwart scherm, de wereld (1920 x 1080) wordt geschaald om te passen
+   ===================================================================== */
+html,
+body {
+  cursor: crosshair;
+  background: #000;
+  height: 100%;
+  margin: 0;
+  font-family:
+    system-ui,
+    -apple-system,
+    Segoe UI,
+    Roboto,
+    sans-serif;
+  overflow: hidden;
+}
+#wereld {
+  width: 1920px;
+  height: 1080px;
+  transform: translate(-50%, -50%) scale(var(--schaal, 1));
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  overflow: hidden;
+}
+#schilderij {
+  object-fit: cover;
+  -webkit-user-select: none;
+  user-select: none;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+}
+#mannetjes-laag {
+  position: absolute;
+  inset: 0;
+}
+
+/* =====================================================================
+   SFEER: zon, wolken, vogels, blaadjes, windstrepen (sfeer.js)
+   ===================================================================== */
+.sfeer-laag {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+.wind-laag {
+  z-index: 2000;
+}
+.zon {
+  width: 680px;
+  height: 680px;
+  position: absolute;
+}
+.wolk,
+.vogel,
+.blaadje {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.wolk,
+.vogel,
+.blaadje,
+.zon,
+.boom {
+  will-change: transform;
+}
+.wolk {
+  opacity: 0.75;
+}
+.horizon {
+  pointer-events: none;
+  width: 1920px;
+  height: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.boom {
+  pointer-events: none;
+  width: 1920px;
+  height: 1080px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.vogel {
+  width: 40px;
+  height: 16px;
+}
+.vogel svg {
+  width: 100%;
+  height: 100%;
+  animation: 0.32s ease-in-out infinite alternate klappen;
+  display: block;
+}
+@keyframes klappen {
+  0% {
+    transform: scaleY(1);
+  }
+  to {
+    transform: scaleY(-0.5);
+  }
+}
+.blaadje {
+  border-radius: 50%;
+  width: 18px;
+  height: 10px;
+  box-shadow: 0 1px 1px #0003;
+}
+.windstreep {
+  opacity: 0;
+  width: 260px;
+  height: 40px;
+  animation: 1.8s ease-in-out both windstreep;
+  position: absolute;
+  left: 0;
+}
+@keyframes windstreep {
+  0% {
+    opacity: 0;
+    transform: translate(-300px);
+  }
+  25% {
+    opacity: 0.55;
+  }
+  75% {
+    opacity: 0.55;
+  }
+  to {
+    opacity: 0;
+    transform: translate(1900px);
+  }
+}
+
+/* =====================================================================
+   BEWEGENDE OBJECTEN: lam, engelen, vleugels, zon, duif
+   (de namen komen uit 'beweging' in instellingen.js)
+   ===================================================================== */
+.beweging-lam {
+  will-change: transform;
+  animation: 9s ease-in-out infinite lam;
+}
+@keyframes lam {
+  0%,
+  to {
+    transform: scaleY(1) rotate(0);
+  }
+  15% {
+    transform: scaleY(1.025) rotate(0);
+  }
+  30% {
+    transform: scaleY(1) rotate(0);
+  }
+  45% {
+    transform: scaleY(1.025) rotate(-1.6deg);
+  }
+  62% {
+    transform: scaleY(1) rotate(-1.6deg);
+  }
+  75% {
+    transform: scaleY(1.025) rotate(0);
+  }
+}
+.beweging-wiegen {
+  will-change: transform;
+  animation: 4.5s ease-in-out infinite alternate wiegen;
+}
+@keyframes wiegen {
+  0% {
+    transform: rotate(-0.8deg) scaleY(1);
+  }
+  to {
+    transform: rotate(0.8deg) scaleY(1.015);
+  }
+}
+.beweging-zwaaien {
+  will-change: transform;
+  animation: 2.6s ease-in-out infinite alternate zwaaien;
+}
+@keyframes zwaaien {
+  0% {
+    transform: rotate(-1.8deg);
+  }
+  to {
+    transform: rotate(1.8deg);
+  }
+}
+.beweging-lamkop {
+  will-change: transform;
+  animation: 7s ease-in-out infinite lamkop;
+}
+@keyframes lamkop {
+  0%,
+  to {
+    transform: rotate(0);
+  }
+  20% {
+    transform: rotate(-7deg);
+  }
+  32% {
+    transform: rotate(-7deg);
+  }
+  48% {
+    transform: rotate(5deg);
+  }
+  60% {
+    transform: rotate(5deg);
+  }
+  75% {
+    transform: rotate(0) scaleX(0.96);
+  }
+}
+.beweging-vleugel-links {
+  will-change: transform;
+  animation: 1.8s ease-in-out infinite alternate vleugel-links;
+}
+@keyframes vleugel-links {
+  0% {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(-7deg);
+  }
+}
+.beweging-vleugel-rechts {
+  will-change: transform;
+  animation: 2.1s ease-in-out infinite alternate vleugel-rechts;
+}
+@keyframes vleugel-rechts {
+  0% {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(6deg);
+  }
+}
+.zon-gloed {
+  animation: 5s ease-in-out infinite alternate zon-gloed;
+}
+@keyframes zon-gloed {
+  /* alleen gloeien, niet groter worden: anders schuift de zon over zijn eigen kopie in het schilderij */
+  0% {
+    filter: brightness(1);
+  }
+  to {
+    filter: brightness(1.18) drop-shadow(0 0 30px #ffe696e6);
+  }
+}
+.duif {
+  animation: 0.9s ease-in-out infinite alternate duif;
+}
+@keyframes duif {
+  0% {
+    transform: scale(1) translateY(0);
+  }
+  to {
+    transform: scale(1.08, 0.82) translateY(-2px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .beweging-lam,
+  .beweging-wiegen,
+  .beweging-zwaaien,
+  .beweging-lamkop,
+  .beweging-vleugel-links,
+  .beweging-vleugel-rechts,
+  .zon-gloed,
+  .duif {
+    animation: none;
+  }
+}
+
+/* =====================================================================
+   VOORGROND en geschilderde groepen (z-index = voetY)
+   ===================================================================== */
+.groep-strook {
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-size: 1920px 1080px;
+  height: 1080px;
+  position: absolute;
+  top: 0;
+}
+.voorgrond-groep {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+.voorgrond {
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* =====================================================================
+   MANNETJES: positie, naam, pop-in en pop-out
+   ===================================================================== */
+.mannetje {
+  transform-origin: 0 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.mannetje-binnen {
+  bottom: 0;
+  left: calc(var(--figuur-hoogte) * -0.3);
+  width: calc(var(--figuur-hoogte) * 0.6);
+  transform-origin: 50% 100%;
+  flex-direction: column;
+  align-items: center;
+  display: flex;
+  position: absolute;
+}
+.figuur {
+  /* omdraaien gaat vloeiend (de figuur draait als het ware rond), niet in één klap */
+  transition: transform 0.28s ease-in-out;
+  width: 100%;
+  height: var(--figuur-hoogte);
+  /* Schaduw op de grond: een donkere kern en een zachte, bredere rand.
+     In een donkere hoek (--licht < 1) is de schaduw minder zichtbaar. */
+  background:
+    radial-gradient(40% 4.5% at 50% 98.5%, rgb(0 0 0 / calc(0.6 * var(--licht, 1))), transparent),
+    radial-gradient(75% 9% at 52% 98%, rgb(0 0 0 / calc(0.25 * var(--licht, 1))), transparent);
+  position: relative;
+}
+/* Licht en verte (zie inpassen.js): in een donkere hoek donkerder,
+   ver weg minder kleur en minder contrast, zoals de geschilderde figuren. */
+.figuur > .samengesteld,
+.figuur > img.tekening {
+  filter: brightness(var(--licht, 1)) saturate(calc(1 - var(--verte, 0)))
+    contrast(calc(1 - var(--verte, 0) * 0.5));
+}
+.figuur > img.tekening {
+  filter: sepia(0.15) brightness(var(--licht, 1)) saturate(calc(1 - var(--verte, 0)))
+    contrast(calc(1 - var(--verte, 0) * 0.5));
+}
+.figuur svg,
+.figuur img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+.figuur img {
+  object-fit: contain;
+  object-position: 50% 100%;
+}
+.naam {
+  /* Een naamkaartje van oud perkament, zoals een opschrift op een schilderij */
+  color: #3b2412;
+  white-space: nowrap;
+  transform-origin: 50% 100%;
+  background:
+    radial-gradient(120% 140% at 50% 50%, transparent 55%, rgb(120 80 30 / 0.35)),
+    #eadcb8;
+  border: 2px solid #8a6a3a;
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px rgb(255 245 220 / 0.5) inset, 0 3px 8px rgb(0 0 0 / 0.45);
+  margin-bottom: 8px;
+  padding: 0 10px 2px;
+  border-width: 1.5px;
+  font: 19px/1.15 'IM Fell English SC', 'Cormorant Garamond', Georgia, serif;
+  letter-spacing: 0.02em;
+}
+.pop-in {
+  animation: 0.5s cubic-bezier(0.3, 1.6, 0.6, 1) both pop-in;
+}
+@keyframes pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.mannetje.pop-out .mannetje-binnen {
+  animation: 0.4s ease-in both pop-out;
+}
+@keyframes pop-out {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0);
+  }
+}
+
+/* =====================================================================
+   PERSONAGES LATEN STAPPEN: benen apart, of het hele lijf schrijdt (lange kleren)
+   ===================================================================== */
+@keyframes schrijden {
+  0% {
+    transform: rotate(-1.6deg) translateY(0) scaleY(1);
+  }
+  to {
+    transform: rotate(1.6deg) translateY(-1.5%) scaleY(0.99);
+  }
+}
+.figuur .samengesteld {
+  width: 100%;
+  height: 120%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+.figuur .samengesteld .deel {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+}
+.figuur .samengesteld .been-l,
+.figuur .samengesteld .been-r {
+  transform-origin: 50% 68%;
+}
+.loopt .figuur .samengesteld .been-l {
+  animation: 0.35s ease-in-out infinite alternate been-stap;
+}
+.loopt .figuur .samengesteld .been-r {
+  animation: 0.35s ease-in-out infinite alternate-reverse been-stap;
+}
+@keyframes been-stap {
+  0% {
+    transform: rotate(-14deg);
+  }
+  to {
+    transform: rotate(14deg);
+  }
+}
+/* Het bovenlijf wiegt mee met de stappen, rond de heup (zo komt er nooit een gat tussen lijf en benen),
+   en het hele figuurtje veert bij elke stap een heel klein beetje op */
+.loopt .figuur .samengesteld .lijf {
+  transform-origin: 50% 68%;
+  animation: 0.35s ease-in-out infinite alternate lijf-wieg;
+}
+@keyframes lijf-wieg {
+  0% {
+    transform: rotate(1.4deg);
+  }
+  to {
+    transform: rotate(-1.4deg);
+  }
+}
+.loopt .figuur .samengesteld:not(.lang) {
+  animation: 0.175s ease-in-out infinite alternate opveren;
+}
+@keyframes opveren {
+  0% {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-1.2%);
+  }
+}
+.loopt .figuur .samengesteld.lang {
+  transform-origin: 50% 100%;
+  animation: 0.55s ease-in-out infinite alternate schrijden;
+}
+.loopt .figuur .samengesteld.lang .lijf {
+  animation: none;
+}
+.loopt .figuur img.tekening {
+  transform-origin: 50% 100%;
+  animation: 0.35s ease-in-out infinite alternate waggel;
+}
+@keyframes waggel {
+  0% {
+    transform: rotate(-5deg) translateY(0);
+  }
+  to {
+    transform: rotate(5deg) translateY(-3%);
+  }
+}
+@keyframes wip {
+  0% {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-4%);
+  }
+}
+
+/* =====================================================================
+   STENEN, sterven en rookwolkjes (stenen.js)
+   ===================================================================== */
+.steen {
+  z-index: 4500;
+  pointer-events: none;
+  background: radial-gradient(circle at 35% 30%, #b5afa4, #6e6a63 60%, #45423d);
+  border-radius: 45% 55% 50% 40%;
+  width: 36px;
+  height: 30px;
+  position: absolute;
+  top: -15px;
+  left: -18px;
+  box-shadow: 0 2px 4px #0006;
+}
+.mannetje.dood .figuur {
+  filter: brightness(0.75) sepia() saturate(9) hue-rotate(-35deg);
+}
+.mannetje.dood .mannetje-binnen {
+  animation: 0.45s ease-in forwards omvallen;
+}
+.mannetje.dood .naam,
+.mannetje.dood .levensbalk {
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+@keyframes omvallen {
+  0% {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(90deg);
+  }
+}
+.wolkje {
+  transform-origin: 0 0;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.deeltje {
+  left: calc(var(--grootte) / -2);
+  top: calc(var(--grootte) / -2);
+  width: var(--grootte);
+  height: var(--grootte);
+  animation: 0.9s ease-out both opstijgen;
+  position: absolute;
+}
+.rook .deeltje {
+  background: #e9e9e9;
+  box-shadow: inset -3px -3px #0000001f;
+}
+.stof .deeltje {
+  background: #967850b3;
+  border-radius: 50%;
+}
+@keyframes opstijgen {
+  0% {
+    opacity: 1;
+    transform: translate(0) scale(0.4);
+  }
+  to {
+    transform: translate(var(--dx), var(--dy)) scale(1.2);
+    opacity: 0;
+  }
+}
+
+/* =====================================================================
+   BRAWL: zwaard, levensbalk, winnaar (acties.js)
+   ===================================================================== */
+.zwaard {
+  transform-origin: 50% 92%;
+  width: 24%;
+  height: 58%;
+  position: absolute;
+  bottom: 22%;
+  left: 62%;
+  transform: rotate(25deg);
+}
+.zwaard svg {
+  width: 100%;
+  height: 100%;
+}
+.zwaard.slaat {
+  animation: 0.25s ease-out zwaai;
+}
+@keyframes zwaai {
+  0% {
+    transform: rotate(-40deg);
+  }
+  60% {
+    transform: rotate(115deg);
+  }
+  to {
+    transform: rotate(25deg);
+  }
+}
+.levensbalk {
+  transform-origin: 50% 100%;
+  background: #00000080;
+  border: 2px solid #000000b3;
+  border-radius: 5px;
+  width: 64px;
+  height: 9px;
+  margin: -14px 0 8px;
+  display: none;
+  overflow: hidden;
+}
+.mannetje.vechter .levensbalk {
+  display: block;
+}
+.levensbalk div {
+  background: #5bd35b;
+  width: 100%;
+  height: 100%;
+  transition: width 0.2s;
+}
+.levensbalk.bijna-dood div {
+  background: #e5463a;
+}
+.mannetje.au .figuur {
+  filter: brightness(1.2) sepia() saturate(8) hue-rotate(-40deg);
+}
+.mannetje.winnaar .mannetje-binnen {
+  animation: 0.35s ease-in-out infinite alternate juichen;
+}
+@keyframes juichen {
+  0% {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-30px);
+  }
+}
+.grote-tekst {
+  z-index: 5500;
+  color: #ffd23f;
+  white-space: nowrap;
+  text-shadow:
+    0 0 #000,
+    6px 6px #5a1a12,
+    -2px -2px #5a1a12,
+    2px -2px #5a1a12,
+    -2px 2px #5a1a12;
+  pointer-events: none;
+  font-size: 120px;
+  font-weight: 900;
+  animation: 2.6s ease-out both grote-tekst;
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+@keyframes grote-tekst {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.2);
+  }
+  12% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.15);
+  }
+  20% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  80% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -60%) scale(1);
+  }
+}
+
+/* =====================================================================
+   NUKE: bom, flits, vuurbal, schokgolf, paddenstoel, krater (acties.js)
+   ===================================================================== */
+.bom {
+  z-index: 3500;
+  background: radial-gradient(circle at 35% 40%, #6d7378, #2c3034 70%);
+  border-radius: 50% 50% 45% 45%/35% 35% 65% 65%;
+  width: 46px;
+  height: 90px;
+  margin: -90px 0 0 -23px;
+  animation: 1s ease-in both bom-valt;
+  position: absolute;
+}
+.bom:before {
+  content: "";
+  clip-path: polygon(0 0, 100% 0, 70% 100%, 30% 100%);
+  background: #3a3f44;
+  width: 62px;
+  height: 22px;
+  position: absolute;
+  top: -14px;
+  left: -8px;
+}
+@keyframes bom-valt {
+  0% {
+    transform: translateY(-900px) scale(1.4);
+  }
+  to {
+    transform: translateY(0) scale(1);
+  }
+}
+.flits {
+  z-index: 6000;
+  pointer-events: none;
+  background: #fffbe8;
+  animation: 1.2s ease-out both flits;
+  position: absolute;
+  inset: 0;
+}
+@keyframes flits {
+  0% {
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+.vuurbal {
+  z-index: 3000;
+  pointer-events: none;
+  background: radial-gradient(
+    #fff6c8 0%,
+    #ffd23f 22%,
+    #ff7a1a 48%,
+    #b3200f 70%,
+    #50140a00 72%
+  );
+  border-radius: 50%;
+  width: 900px;
+  height: 600px;
+  animation: 2.4s ease-out both vuurbal;
+  position: absolute;
+}
+@keyframes vuurbal {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0);
+  }
+  25% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -60%) scale(1.25);
+  }
+}
+.schokgolf {
+  z-index: 3100;
+  pointer-events: none;
+  border: 14px solid #fffff0d9;
+  border-radius: 50%;
+  width: 600px;
+  height: 200px;
+  animation: 1.4s ease-out both schokgolf;
+  position: absolute;
+}
+@keyframes schokgolf {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(5);
+  }
+}
+.paddenstoel {
+  z-index: 3200;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+  animation: 3.4s ease-out both paddenstoel;
+  position: absolute;
+}
+.paddenstoel:before {
+  content: "";
+  background: linear-gradient(#a3633a, #6b4a3a 60%, #5a463c66);
+  border-radius: 40% 40% 10% 10%;
+  width: 120px;
+  height: 420px;
+  position: absolute;
+  bottom: 0;
+  left: -60px;
+}
+.paddenstoel:after {
+  content: "";
+  background: radial-gradient(at 50% 60%, #ffb347, #c4572a 45%, #6e4a3f 75%);
+  border-radius: 50%;
+  width: 520px;
+  height: 260px;
+  position: absolute;
+  bottom: 360px;
+  left: -260px;
+}
+@keyframes paddenstoel {
+  0% {
+    opacity: 0;
+    transform: translateY(80px) scale(0.2);
+  }
+  15% {
+    opacity: 1;
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-40px) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-120px) scale(1.15);
+  }
+}
+.krater {
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(#2a1d14 0%, #4a3322 45%, #3c2d1e00 70%);
+  border-radius: 50%;
+  width: 520px;
+  height: 150px;
+  animation: 8s ease-in both krater;
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+@keyframes krater {
+  0%,
+  60% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+#wereld.schudden {
+  animation: 0.9s linear schudden;
+}
+@keyframes schudden {
+  0%,
+  to {
+    translate: 0;
+  }
+  10% {
+    translate: -18px 10px;
+  }
+  20% {
+    translate: 16px -12px;
+  }
+  30% {
+    translate: -14px -8px;
+  }
+  40% {
+    translate: 12px 10px;
+  }
+  55% {
+    translate: -8px 6px;
+  }
+  70% {
+    translate: 6px -4px;
+  }
+  85% {
+    translate: -3px 2px;
+  }
+}
+
+/* =====================================================================
+   QR-CODE, DEBUG en MELDINGEN
+   ===================================================================== */
+#qr-hoek {
+  z-index: 5000;
+  text-align: center;
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px 16px 10px;
+  position: absolute;
+  bottom: 40px;
+  right: 40px;
+  box-shadow: 0 8px 30px #00000059;
+}
+#qr-code {
+  display: block;
+  width: 200px !important;
+  height: 200px !important;
+}
+#qr-hoek p {
+  color: #111;
+  margin: 8px 0 0;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.15;
+}
+#debug-canvas {
+  z-index: 4000;
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+#debug-paneel {
+  z-index: 9000;
+  color: #0f0;
+  white-space: pre;
+  background: #000c;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font:
+    14px/1.5 ui-monospace,
+    Menlo,
+    Consolas,
+    monospace;
+  position: fixed;
+  top: 10px;
+  left: 10px;
+}
+#melding {
+  z-index: 9000;
+  color: #111;
+  text-align: center;
+  background: #ffd23f;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translate(-50%);
+}
+
+/* =====================================================================
+   SCHILDERIJEN WISSELEN EN FEITJES
+   ===================================================================== */
+
+/* Het naambordje linksonder, zoals in een museum */
+#naambordje {
+  position: absolute;
+  left: 40px;
+  bottom: 40px;
+  z-index: 5000;
+  max-width: 560px;
+  padding: 12px 20px 14px;
+  border-radius: 6px;
+  background: #f3ecdcee;
+  color: #241a10;
+  box-shadow: 0 8px 30px #00000059;
+  font-family: Georgia, 'Times New Roman', serif;
+}
+#naambordje strong {
+  display: block;
+  font-size: 28px;
+  line-height: 1.15;
+}
+#naambordje[hidden] {
+  display: none;
+}
+#naambordje span {
+  font-size: 20px;
+  opacity: 0.75;
+}
+
+/* De grote titel na een wissel: komt zacht in beeld en verdwijnt weer */
+#naamkaart {
+  position: absolute;
+  inset: 0;
+  z-index: 6000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  text-align: center;
+  color: #fff8e8;
+  background: radial-gradient(60% 40% at 50% 50%, #000a, #0000);
+  font-family: Georgia, 'Times New Roman', serif;
+  text-shadow: 0 4px 24px #000;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+#naamkaart.zichtbaar {
+  opacity: 1;
+}
+#naamkaart h1 {
+  margin: 0;
+  font-size: 96px;
+  font-weight: normal;
+}
+#naamkaart p {
+  margin: 10px 0 0;
+  font-size: 40px;
+  opacity: 0.85;
+}
+
+/* Zwart doek over alles om rustig te wisselen */
+#wissel-doek {
+  position: fixed;
+  inset: 0;
+  z-index: 9500;
+  background: #000;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.1s ease;
+}
+#wissel-doek.zichtbaar {
+  opacity: 1;
+}
+
+/* De tekstballon boven een mannetje dat een feitje vertelt */
+.tekstballon {
+  /* Een stuk perkament met een gouden rand, zoals een banderol op een oud schilderij.
+     Het puntje komt net boven het hoofd van wie spreekt (de figuur is --figuur-hoogte hoog). */
+  position: absolute;
+  bottom: calc(var(--figuur-hoogte) * 1.02);
+  left: 50%;
+  transform-origin: 0 100%;
+  width: 480px;
+  padding: 18px 24px 20px;
+  border-radius: 4px;
+  background:
+    radial-gradient(130% 120% at 50% 40%, transparent 50%, rgb(130 85 30 / 0.4)),
+    #f0e4c6;
+  border: 3px double #9a7438;
+  color: #2a180b;
+  font: 600 31px/1.25 'Cormorant Garamond', Georgia, serif;
+  text-align: left;
+  box-shadow: 0 12px 30px rgb(0 0 0 / 0.5);
+  animation: ballon-in 0.35s ease-out both;
+}
+.tekstballon::first-letter {
+  /* de eerste letter in het rood, zoals in een oud handschrift (in de lijn: alle regels starten gelijk) */
+  color: #8e1d14;
+  font-weight: 700;
+}
+.tekstballon::after {
+  /* het puntje van de ballon */
+  content: '';
+  position: absolute;
+  left: calc(50% - 14px);
+  bottom: -14px;
+  border: 14px solid transparent;
+  border-bottom: 0;
+  border-top-color: #9a7438;
+}
+.tekstballon[hidden] {
+  display: none;
+}
+@keyframes ballon-in {
+  from {
+    opacity: 0;
+    translate: 0 20px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+/* Wie vertelt: het naamkaartje maakt plaats voor de tekstballon */
+.mannetje.vertelt .naam {
+  visibility: hidden;
+}
+/* Wie vertelt, staat vooraan: altijd boven de anderen */
+.mannetje.vertelt {
+  z-index: 3000 !important;
+}
+
+/* =====================================================================
+   EFFECTEN per schilderij (effecten.js): rook, vonken, licht, ...
+   ===================================================================== */
+.effect-laag {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+/* Licht maakt het schilderij lichter, zoals echt licht (nooit donkerder) */
+.effect-licht {
+  mix-blend-mode: screen;
+}
+/* Effecten "voor" de mannetjes komen boven hen, maar onder de QR-code en meldingen */
+.effect-voor {
+  z-index: 1900;
+}
+/* E-toets of effectenAan: false in instellingen.js */
+.geen-effecten .effect-laag {
+  display: none;
+}
+/* toonQrCode: false in instellingen.js → de QR-code hangt op papier */
+#qr-hoek[hidden] {
+  display: none;
+}
+
+/* =====================================================================
+   VERNIS: alles (schilderij én mannetjes) onder één laag oude vernis
+   ===================================================================== */
+#vernis {
+  z-index: 1950; /* boven de mannetjes en de effecten, onder QR-code en meldingen */
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  opacity: var(--vernis-sterkte, 0.55);
+  /* donkere randen, zoals een oud doek in een museumzaal; de vernis-afbeelding zet display.js erbij */
+  background: radial-gradient(130% 115% at 50% 45%, transparent 55%, rgb(25 12 4 / 0.55));
+  background-size: 1920px 1080px;
+  mix-blend-mode: overlay;
+}
+
+/* Wie stilstaat, ademt heel zachtjes (geschilderde mensen staan ook nooit helemaal stokstijf) */
+.mannetje:not(.loopt):not(.dood) .figuur > .samengesteld {
+  transform-origin: 50% 100%;
+  animation: ademen 3.6s ease-in-out infinite;
+}
+@keyframes ademen {
+  0%, 100% { transform: scaleY(1) rotate(0deg); }
+  50% { transform: scaleY(1.012) rotate(0.4deg); }
+}
+
+/* =====================================================================
+   SLAGSCHADUW: het figuurtje, zwart en wazig, platgedrukt op de grond.
+   De vorm (richting en lengte) komt van "schaduw" in schilderijen.js (--schaduw-vorm).
+   ===================================================================== */
+.slagschaduw {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: var(--figuur-hoogte);
+  transform-origin: 50% 100%;
+  transform: var(--schaduw-vorm, scaleY(-0.25));
+  opacity: calc(var(--schaduw-sterkte, 0.35) * var(--licht, 1));
+  filter: brightness(0) blur(2.5px);
+  pointer-events: none;
+}
+.schaduw-figuur {
+  background: none !important;
+  height: 100%;
+}
+.mannetje.dood .slagschaduw,
+.mannetje.pop-out .slagschaduw {
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* =====================================================================
+   ACTIES van de gsm (zie "acties" in schilderijen.js en ontvangActie in display.js)
+   ===================================================================== */
+/* De animatie werkt op het figuurtje (en zijn schaduw), vanaf de voeten */
+.mannetje[class*='actie-'] .figuur > .samengesteld,
+.mannetje[class*='actie-'] .figuur > img.tekening {
+  transform-origin: 50% 100%;
+}
+.mannetje.actie-knielen .figuur > * {
+  animation: knielen 0.6s ease-out forwards !important;
+}
+@keyframes knielen {
+  to { transform: translateY(13%) scaleY(0.82); }
+}
+.mannetje.actie-buigen .figuur > * {
+  animation: buigen 2.4s ease-in-out infinite !important;
+}
+@keyframes buigen {
+  0%, 100% { transform: rotate(0deg); }
+  35%, 65% { transform: rotate(14deg) translateY(2%); }
+}
+.mannetje.actie-zwaaien .figuur > * {
+  animation: actie-zwaai 0.5s ease-in-out infinite alternate !important;
+}
+@keyframes actie-zwaai {
+  from { transform: rotate(-4deg); }
+  to { transform: rotate(4deg); }
+}
+.mannetje.actie-springen .figuur > * {
+  animation: actie-spring 0.32s ease-out infinite alternate !important;
+}
+@keyframes actie-spring {
+  from { transform: translateY(0) scaleY(0.97); }
+  to { transform: translateY(-12%) scaleY(1.02); }
+}
+.mannetje.actie-zingen .figuur > * {
+  animation: zingen 0.9s ease-in-out infinite alternate !important;
+}
+@keyframes zingen {
+  from { transform: rotate(-2.5deg) scaleY(1); }
+  to { transform: rotate(2.5deg) scaleY(1.03); }
+}
+.mannetje.actie-trommelen .figuur > * {
+  animation: trommelen 0.14s ease-in-out infinite alternate !important;
+}
+@keyframes trommelen {
+  from { transform: translateY(0); }
+  to { transform: translateY(-2.5%) rotate(1deg); }
+}
+.mannetje.actie-gooien .figuur > * {
+  animation: gooien 0.7s ease-out 1 !important;
+}
+@keyframes gooien {
+  0% { transform: rotate(0); }
+  30% { transform: rotate(-12deg); }
+  60% { transform: rotate(10deg); }
+  100% { transform: rotate(0); }
+}
+.mannetje.actie-terugslag .figuur > * {
+  animation: terugslag 0.6s ease-out 1 !important;
+}
+@keyframes terugslag {
+  0% { transform: rotate(0); }
+  15% { transform: rotate(-9deg) translateX(-3%); }
+  100% { transform: rotate(0); }
+}
+/* Glijden over het ijs: de benen stappen niet, het figuurtje leunt naar voren */
+.mannetje.glijdt .figuur .samengesteld .been-l,
+.mannetje.glijdt .figuur .samengesteld .been-r,
+.mannetje.glijdt .figuur > * {
+  animation: none !important;
+}
+.mannetje.glijdt .figuur > .samengesteld {
+  transform: rotate(7deg);
+  transform-origin: 50% 100%;
+}
+
+/* De vlag die je mannetje zwaait (Vrijheid): blauw-wit-rood, wapperend aan een stok */
+.actie-vlag {
+  position: absolute;
+  left: 62%;
+  bottom: 52%;
+  width: 4%;
+  height: 70%;
+  background: #4a3020;
+  transform-origin: 50% 100%;
+  animation: actie-zwaai 0.5s ease-in-out infinite alternate;
+}
+.actie-vlag::after {
+  content: '';
+  position: absolute;
+  left: 100%;
+  top: 0;
+  width: 900%;
+  height: 34%;
+  background: linear-gradient(90deg, #1f3a73 33%, #eee6d6 33% 66%, #b3241c 66%);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 0.3);
+  transform-origin: 0 50%;
+  animation: vlag-golf 0.45s ease-in-out infinite alternate;
+}
+@keyframes vlag-golf {
+  from { transform: skewY(-8deg) scaleX(1); }
+  to { transform: skewY(8deg) scaleX(0.92); }
+}
+
+/* Tijdens een actie staat de naam in de ballon: het naamkaartje maakt plaats */
+.mannetje[class*='actie-'] .naam {
+  visibility: hidden;
+}
+/* Korte tekst bij een actie: kleiner dan een feitje */
+.tekstballon.kort {
+  width: auto;
+  white-space: nowrap;
+  padding: 8px 18px 10px;
+  font-size: 30px;
+}
+
+/* Deeltjes rond het hoofd */
+.actie-deeltjes {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.actie-deeltje {
+  position: absolute;
+  left: -8px;
+  top: -8px;
+  opacity: 0;
+  font: 700 30px/1 'Cormorant Garamond', Georgia, serif;
+  white-space: nowrap;
+  text-shadow: 0 1px 3px rgb(0 0 0 / 0.6);
+  animation: deeltje-op 2s ease-out forwards;
+}
+@keyframes deeltje-op {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.6) rotate(0); }
+  15% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1.1) rotate(calc(var(--draai) * 0.2)); }
+}
+.noten .actie-deeltje { color: #f3e3b5; }
+.sterren .actie-deeltje { color: #ffd76a; font-size: 26px; }
+.boem .actie-deeltje { color: #f5e6c4; font-size: 26px; font-style: italic; }
+.druppels .actie-deeltje,
+.munten .actie-deeltje,
+.vonken .actie-deeltje,
+.sneeuw .actie-deeltje,
+.blaadjes .actie-deeltje {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+.druppels .actie-deeltje { background: #9ecbe0; box-shadow: 0 0 4px #d8f0ff; }
+.munten .actie-deeltje { background: radial-gradient(circle at 35% 35%, #fff2b0, #c99a36 60%, #7a5a1c); width: 12px; height: 12px; }
+.vonken .actie-deeltje { background: #ffb347; box-shadow: 0 0 8px #ff8a1a; width: 6px; height: 6px; }
+.sneeuw .actie-deeltje { background: #f4f2ea; width: 11px; height: 11px; animation-duration: 0.9s; }
+.blaadjes .actie-deeltje {
+  width: 12px;
+  height: 7px;
+  border-radius: 50% 0;
+  background: #b3243a;
+  animation-name: blaadje-val;
+  animation-duration: 2.6s;
+}
+@keyframes blaadje-val {
+  0% { opacity: 0; transform: translate(0, -60px) rotate(0); }
+  15% { opacity: 1; }
+  100% { opacity: 0; transform: translate(calc(var(--dx) * 1.6), 90px) rotate(var(--draai)); }
+}
+.flits .actie-deeltje {
+  width: 60px;
+  height: 60px;
+  left: -30px;
+  top: -30px;
+  border-radius: 50%;
+  background: radial-gradient(#fff6c8, #ffb347 40%, transparent 70%);
+  animation: flits 0.35s ease-out forwards;
+  animation-delay: 0s !important;
+}
+.sneeuwbal {
+  position: absolute;
+  left: -9px;
+  top: -9px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ffffff, #dcdcd6 70%);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 0.35);
+  pointer-events: none;
+}
+
+/* =====================================================================
+   DE NUKE (nuke.js): canvas met de explosie + licht over het schilderij
+   ===================================================================== */
+.nuke-laag {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3200;
+  pointer-events: none;
+  filter: blur(1.5px); /* zachter: geen losse bolletjes */
+}
+/* verblindende flits */
+.nuke-flits {
+  position: absolute;
+  inset: 0;
+  z-index: 6000;
+  background: #fffdf4;
+  opacity: 0;
+  pointer-events: none;
+}
+/* oranje licht van de vuurbal op het hele schilderij (en de mannetjes) */
+.nuke-licht {
+  position: absolute;
+  inset: 0;
+  z-index: 3100;
+  mix-blend-mode: screen;
+  opacity: 0;
+  pointer-events: none;
+}
+/* daarna: de lucht wordt donker van de rook */
+.nuke-donker {
+  position: absolute;
+  inset: 0;
+  z-index: 3050;
+  background: radial-gradient(130% 100% at 50% 20%, rgb(40 25 15), rgb(70 45 25));
+  mix-blend-mode: multiply;
+  opacity: 0;
+  pointer-events: none;
+}
+/* mannetjes die de schokgolf krijgen: verkoold */
+.mannetje.verkoold .figuur {
+  filter: brightness(0.25) sepia(1) saturate(3) hue-rotate(-20deg) !important;
+  transition: filter 0.15s;
+}
+.mannetje.verkoold .naam {
+  opacity: 0;
+}
+
+/* De museumlijst en de muur (lijst.js): over alles heen, met een gat voor het schilderij */
+#lijst {
+  position: fixed;
+  inset: 0;
+  z-index: 8000;
+  pointer-events: none;
+}
+#lijst[hidden] {
+  display: none;
+}

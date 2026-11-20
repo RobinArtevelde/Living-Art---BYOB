@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stap in het schilderij – affiche</title>
+    <style>
+      /* Een A4-affiche om af te drukken en naast de beamer te hangen.
+         Open deze pagina op het ECHTE adres (bv. https://jullie-project.web.app/affiche.html):
+         de QR-code wijst dan naar join.html op datzelfde adres. Druk dan Ctrl+P / Cmd+P. */
+      @page {
+        size: A4 portrait;
+        margin: 0;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #6b6b6b;
+        font-family: Georgia, 'Times New Roman', serif;
+        color: #1b1b2f;
+      }
+      .blad {
+        width: 210mm;
+        height: 297mm;
+        margin: 10mm auto;
+        padding: 22mm 20mm;
+        background: #f6efe0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        border: 3mm double #b58a3a; /* een gouden lijst, zoals rond een schilderij */
+      }
+      h1 {
+        margin: 0;
+        font-size: 44pt;
+        line-height: 1.05;
+      }
+      .ondertitel {
+        margin: 6mm 0 10mm;
+        font-size: 17pt;
+        font-style: italic;
+      }
+      #qr {
+        width: 120mm !important;
+        height: 120mm !important;
+        padding: 6mm;
+        background: #fff;
+        border-radius: 4mm;
+      }
+      ol {
+        margin: 12mm 0 0;
+        padding: 0;
+        list-style: none;
+        font-size: 16pt;
+        line-height: 1.6;
+        font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      }
+      ol b {
+        color: #a3241a;
+      }
+      .adres {
+        margin-top: auto;
+        font: 11pt system-ui, sans-serif;
+        opacity: 0.7;
+        word-break: break-all;
+      }
+      .uitleg {
+        max-width: 210mm;
+        margin: 0 auto;
+        padding: 6mm 0 0;
+        color: #fff;
+        font: 14px/1.5 system-ui, sans-serif;
+        text-align: center;
+      }
+      @media print {
+        body {
+          background: none;
+        }
+        .blad {
+          margin: 0;
+        }
+        .uitleg {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <p class="uitleg">Druk af met Ctrl+P (Windows) of Cmd+P (Mac), papierformaat A4, marges "geen". Deze tekst wordt niet afgedrukt.</p>
+    <div class="blad">
+      <h1>Stap in het schilderij</h1>
+      <p class="ondertitel">Maak je eigen figuur en wandel mee op de muur</p>
+      <canvas id="qr"></canvas>
+      <ol>
+        <li><b>1.</b> Scan de code met je gsm</li>
+        <li><b>2.</b> Typ je naam en kies je kleren</li>
+        <li><b>3.</b> Kijk naar de muur!</li>
+      </ol>
+      <p class="adres" id="adres"></p>
+    </div>
+    <script type="module" src="/src/affiche.js"></script>
+  </body>
+</html>
